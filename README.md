@@ -1,74 +1,143 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/QGf4F8_h)
-# Projet "Dice" - Gestion de lancés de dés avec Spring Boot
+# Projet Dice
 
-## Description
-Le projet "Dice" est une application construite avec Spring Boot permettant de simuler des lancés de dés et de gérer un historique des résultats en base de données. Ce projet met en œuvre les concepts fondamentaux de Spring Boot, notamment l'injection de dépendances, les services RESTful, les entités JPA et les repositories.
+**Auteur** : Matthieu GARCIA-GIMENEZ
 
+## Aperçu
 
-## Étapes de réalisation
-
-### 1. Création du projet Spring Boot
-- Utilisez [Spring Initializr](https://start.spring.io/) pour créer le projet.
-- Choisissez la dernière version de Spring Boot disponible (LTS).
-- Optez pour **Maven** ou **Gradle** comme outil de gestion de dépendances.
-- Ajoutez les dépendances nécessaires : **Spring Web**, **Spring Data JPA**, **H2 Database** .
-
-### 2. Configuration du projet
-- Configurez l'application pour qu'elle utilise le port **8081**.
-- Donnez un nom (**dice**) au projet dans le fichier de configuration :
-  - Utilisez **`application.properties`** ou **`application.yml`** selon votre préférence.
-
-### 3. Création de la classe `Dice`
-- Implémentez une classe représentant un dé avec les méthodes nécessaires pour effectuer un lancé.
-- Marquez cette classe avec l'annotation `@Component` pour pouvoir l'injecter au besoin.
-
-### 4. Création de l'entité `DiceRollLog`
-- Modélisez une entité JPA `DiceRollLog` comprenant les champs suivants :
-  - **`id`** : Identifiant unique.
-  - **`diceCount`** : Nombre de dés lancés.
-  - **`results`** : Liste ou chaîne des valeurs obtenues. Il existe de nombreuses façons de stocker des valeurs simples (simple String), certaines sont plus élégantes (@ElementCollection) que d'autres, vous pouvez choisir la solution qui vous conviendra.
-  - **`timestamp`** : Horodatage du lancé.
-- Utilisez des annotations JPA comme `@Entity`, `@Id`, `@GeneratedValue`, etc.
-
-### 5. Création du `Repository`
-- Implémentez une interface héritant de `JpaRepository<DiceRollLog, Long>` pour gérer les interactions avec la base de données.
-
-### 6. Création du contrôleur REST pour lancer les dés
-- Implémentez un contrôleur REST annoté avec `@RestController`.
-- Ajoutez les endpoints suivants :
-  - **`GET /rollDice`** : Lancer un seul dé.
-  - **`GET /rollDices/{X}`** : Lancer X dés (X étant un paramètre dynamique).
-
-### 7. Création du `Service`
-- Créez un service marqué avec `@Service` contenant une méthode :
-  - Prend en paramètre le nombre de dés à lancer.
-  - Retourne les résultats des lancés au contrôleur.
-  - Enregistre l’historique des lancés dans la base via le `Repository`.
-
-### 8. Contrôleur pour afficher les historiques
-- Ajoutez un autre contrôleur REST permettant d'afficher l'historique des lancés :
-  - **`GET /diceLogs`** : Retourne tous les enregistrements de `DiceRollLog` au format JSON.
-
-### 9. Tests et validation
-- Démarrez l'application et testez les endpoints.
-- Vérifiez les résultats dans la base de données et les réponses JSON.
-
-### 10. (Bonus) Ajout de fonctionnalités avancées
-- **Swagger** :
-  - Ajoutez la dépendance Swagger/OpenAPI.
-  - Configurez Swagger pour documenter vos endpoints.
-  - Accédez à la documentation sur **`http://localhost:8081/swagger-ui.html`**.
-- **Lombok** :
-  - Utilisez Lombok pour simplifier les getters, setters et constructeurs de vos entités.
+Le **projet Dice** est une application Spring Boot conçue pour simuler des lancés de dés et gérer un historique des résultats stockés dans une base de données. Le projet met en œuvre les concepts fondamentaux de Spring Boot, notamment l'injection de dépendances, les services RESTful, les entités JPA, les repositories, ainsi que Swagger pour la documentation API. Lombok est également utilisé pour simplifier le code.
 
 ---
 
-## Livrables
-- Le code complet du projet, accessible via un dépôt GitHub.
-- Un fichier `README.md` décrivant les étapes réalisées
+## Fonctionnalités
 
-## Technologies
-- **Framework principal** : Spring Boot
-- **Base de données** : H2 
-- **Documentation API** : Swagger (bonus)
-- **Simplification de code** : Lombok (bonus)
+- **Simulation de lancés de dés** : Permet de lancer un ou plusieurs dés.
+- **Gestion de l'historique** : Stocke les résultats des lancés dans une base de données.
+- **Documentation API** : Intégration de Swagger pour explorer facilement les endpoints disponibles.
+- **Simplification du code** : Annotations Lombok pour réduire le code répétitif.
+
+---
+
+## Structure du projet
+
+### 1. **Application principale**
+
+- **`DiceApplication`** : Point d'entrée de l'application. Elle initialise et lance le contexte Spring Boot.
+
+### 2. **Composants principaux**
+
+- **`Dice`** :
+  - Un composant simple représentant un dé.
+  - Fournit la méthode `roll()` pour simuler un lancé de dé (retourne une valeur aléatoire entre 1 et 6).
+
+### 3. **Entités**
+
+- **`DiceRollLog`** :
+  - Une entité JPA représentant un enregistrement des lancés de dés.
+  - Champs :
+    - `id` : Identifiant unique.
+    - `diceCount` : Nombre de dés lancés.
+    - `results` : Résultats des dés sous forme de chaîne de caractères séparée par des virgules.
+    - `timestamp` : Horodatage du lancé.
+
+### 4. **Repositories**
+
+- **`DiceRollLogRepository`** :
+  - Étend `JpaRepository` pour interagir avec la base de données.
+  - Fournit des opérations CRUD pour les entités `DiceRollLog`.
+
+### 5. **Services**
+
+- **`DiceService`** :
+  - Gère la logique principale de lancer des dés et d'enregistrer les résultats dans la base de données.
+  - Fournit la méthode `rollDices(int count)` pour lancer plusieurs dés, enregistrer les résultats et les retourner.
+
+### 6. **Contrôleurs**
+
+- **`DiceController`** :
+  - Expose des endpoints pour lancer des dés :
+    - `GET /dice/rollDice` : Lance un seul dé.
+    - `GET /dice/rollDices/{count}` : Lance `{count}` dés.
+- **`DiceLogController`** :
+  - Expose un endpoint pour récupérer l'historique des lancés de dés :
+    - `GET /diceLogs` : Retourne tous les historiques des lancés sous forme de JSON.
+
+### 7. **Intégration Swagger**
+
+- Fournit une interface de documentation API interactive accessible à [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html).
+
+### 8. **Intégration Lombok**
+
+- Simplifie le code en générant automatiquement les getters, setters et constructeurs pour l'entité `DiceRollLog` grâce à des annotations comme `@Getter` et `@Setter`.
+
+---
+
+## Utilisation
+
+### Accéder à l'application
+
+- **Endpoints de l'API** :
+
+  - **Lancé de dés** :
+    - Un seul dé : `GET http://localhost:8081/dice/rollDice`
+    - Plusieurs dés : `GET http://localhost:8081/dice/rollDices/{count}` (remplacez `{count}` par le nombre de dés à lancer).
+  - **Historique des lancés** :
+    - Récupérer les historiques : `GET http://localhost:8081/diceLogs`
+
+- **Swagger UI** :
+
+  - Visitez [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) pour une interface interactive de documentation API.
+
+### Démarrer le projet
+
+Si vous n'avez pas d'IDE, vous pouvez démarrer le projet en utilisant Gradle depuis la ligne de commande.
+
+1. **Cloner le dépôt** :
+
+   ```bash
+   git clone https://github.com/Master1-MIAGE-UCA/oil-td-spring-gm109526
+   cd oil-td-spring-gm109526
+   ```
+
+2. **Lancer le projet** :
+
+   ```bash
+   ./gradlew bootRun
+   ```
+
+3. **Vérifier que l'application fonctionne** :
+
+   - Ouvrez votre navigateur et allez sur [http://localhost:8081](http://localhost:8081).
+   - Utilisez les liens fournis ou Swagger UI pour interagir avec l'application.
+
+### Tester l'application
+
+- Utilisez un outil comme Postman, cURL ou votre navigateur pour envoyer des requêtes aux endpoints.
+- Commandes cURL exemple :
+  - Lancer un seul dé :
+    ```bash
+    curl http://localhost:8081/dice/rollDice
+    ```
+  - Lancer plusieurs dés (ex. 3 dés) :
+    ```bash
+    curl http://localhost:8081/dice/rollDices/3
+    ```
+  - Récupérer les logs :
+    ```bash
+    curl http://localhost:8081/diceLogs
+    ```
+
+---
+
+## Technologies utilisées
+
+- **Spring Boot** : Framework pour développer des applications Java.
+- **Base de données H2** : Base de données en mémoire pour stocker les historiques des lancés.
+- **Swagger** : Outil de documentation et d'exploration API.
+- **Lombok** : Simplification du code grâce à des annotations.
+- **Gradle** : Outil de gestion de dépendances et de compilation (Kotlin DSL).
+
+---
+
+## Auteur
+
+**Matthieu GARCIA-GIMENEZ**
