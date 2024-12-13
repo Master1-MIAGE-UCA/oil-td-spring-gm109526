@@ -8,19 +8,15 @@ import org.springframework.web.bind.annotation.*;
 public class DiceController {
 
     @Autowired
-    private Dice dice;
+    private DiceService diceService;
 
     @GetMapping("/rollDice")
     public int rollDice() {
-        return dice.roll();
+        return diceService.rollDices(1)[0];
     }
 
     @GetMapping("/rollDices/{count}")
     public int[] rollDices(@PathVariable int count) {
-        int[] results = new int[count];
-        for (int i = 0; i < count; i++) {
-            results[i] = dice.roll();
-        }
-        return results;
+        return diceService.rollDices(count);
     }
 }
