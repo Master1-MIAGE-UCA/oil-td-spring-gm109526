@@ -141,5 +141,3 @@ Si vous n'avez pas d'IDE, vous pouvez démarrer le projet en utilisant Gradle de
 ## Auteur
 
 **Matthieu GARCIA-GIMENEZ**
-
-Merci d'explorer le projet Dice ! Si vous avez des questions ou des suggestions, n'hésitez pas à me contacter.
